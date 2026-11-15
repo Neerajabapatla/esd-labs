@@ -11,8 +11,34 @@
 //       Average    the average with 2 decimals:  (5).toFixed(2) → "5.00"
 //       Max        the biggest number
 //       Non-zero   how many cells aren't 0
+
+//console.log ("Stats render");
 import { stats } from "./matrix.js";
 
 export default function Stats({ matrix }) {
-  throw new Error("TODO");
+    const { sum, average, max, nonZero } = stats(matrix);
+
+  return (
+    <section className="stats">
+      <h2>Stats</h2>
+      <dl>
+        <div>
+          <dt>Sum</dt>
+          <dd>{sum}</dd>
+        </div>
+        <div>
+          <dt>Average</dt>
+          <dd>{average.toFixed(2)}</dd>
+        </div>
+        <div>
+          <dt>Max</dt>
+          <dd>{max}</dd>
+        </div>
+        <div>
+          <dt>Non-zero</dt>
+          <dd>{nonZero}</dd>
+        </div>
+      </dl>
+    </section>
+  );
 }

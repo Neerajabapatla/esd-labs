@@ -11,6 +11,7 @@
 //
 // Lists need a key on the element you return from map — section 06 says which.
 // Section 08: each Cell's onClick calls onIncrement with THAT cell's row and column.
+//console.log("Matrix render");
 import Cell from "./Cell.jsx";
 
 export default function Matrix({ matrix, onIncrement }) {
