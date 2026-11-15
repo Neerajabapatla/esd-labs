@@ -16,5 +16,42 @@ import { useEffect, useState } from "react";
 import { apiFetch } from "../api/client.js";
 
 export function useCourseSearch(query) {
-  throw new Error("TODO");
+  const trimmed = query.trim();
+  const [results, setResults] = useState([]);
+  const [status, setStatus] = useState(trimmed ? "loading" : "idle");
+
+  useEffect(() => {
+    if (!trimmed) {
+      setResults([]);
+      setStatus("idle");
+      return undefined;
+    }
+
+    let ignore = false;
+
+    async function fetchCourses() {
+      setStatus("loading");
+      try {
+        const params = new URLSearchParams({ q: trimmed });
+        const data = await apiFetch(`/api/courses?${params.toString()}`);
+        if (!ignore) {
+          setResults(data);
+          setStatus("ready");
+        }
+      } catch {
+        if (!ignore) {
+          setResults([]);
+          setStatus("error");
+        }
+      }
+    }
+
+    fetchCourses();
+
+    return () => {
+      ignore = true;
+    };
+  }, [trimmed]);
+
+  return { results, status };
 }
