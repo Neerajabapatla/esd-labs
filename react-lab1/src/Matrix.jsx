@@ -14,24 +14,37 @@
 //console.log("Matrix render");
 import Cell from "./Cell.jsx";
 
-export default function Matrix({ matrix, onIncrement }) {
-    return (
+export default function Matrix({ matrix, onIncrement, onDecrement }) {
+  const flatValues = matrix.flat();
+  const hasPositive = flatValues.some((value) => value > 0);
+  const maxValue = hasPositive ? Math.max(...flatValues) : null;
+
+  return (
     <table className="matrix">
       <tbody>
-        {matrix.map((row, rowIndex) => (
-          <tr key={rowIndex}>
-            {row.map((value, colIndex) => (
-              <td key={`${rowIndex}-${colIndex}`}>
-                <Cell
-                  row={rowIndex}
-                  col={colIndex}
-                  value={value}
-                  onClick={() => onIncrement(rowIndex, colIndex)}
-                />
+        {matrix.map((row, rowIndex) => {
+          const rowTotal = row.reduce((sum, value) => sum + value, 0);
+
+          return (
+            <tr key={rowIndex}>
+              {row.map((value, colIndex) => (
+                <td key={`${rowIndex}-${colIndex}`}>
+                  <Cell
+                    row={rowIndex}
+                    col={colIndex}
+                    value={value}
+                    onClick={() => onIncrement(rowIndex, colIndex)}
+                    onDecrement={() => onDecrement(rowIndex, colIndex)}
+                    isMax={maxValue !== null && value === maxValue && value > 0}
+                  />
+                </td>
+              ))}
+              <td key={`total-${rowIndex}`} className="total" aria-label={`Row ${rowIndex + 1} total`}>
+                {rowTotal}
               </td>
-            ))}
-          </tr>
-        ))}
+            </tr>
+          );
+        })}
       </tbody>
     </table>
   );
